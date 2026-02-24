@@ -1,28 +1,12 @@
-import java.util.ArrayList;
 import java.util.List;
 
-public class ScriptParser {
+public class ScriptInterpreter {
 
-    public List<Token> parse(String script) {
-
-        String[] parts = script.split(" ");
-        List<Token> tokens = new ArrayList<>();
-
-        for (String p : parts) {
-
-            if (p.startsWith("0x")) {
-                tokens.add(new PushDataToken(Hex.hexToBytes(p.substring(2))));
-            }
-
-            else if (p.startsWith("OP_")) {
-                tokens.add(new OpcodeToken(Opcode.valueOf(p)));
-            }
-
-            else {
-                throw new RuntimeException("Invalid token");
-            }
+    public boolean execute(List<Token> tokens, ExecutionContext ctx) {
+        for (Token token : tokens) {
+            token.execute(ctx);
         }
-
-        return tokens;
+        return !ctx.isEmpty() && ExecutionContext.isTrue(ctx.pop());
     }
+    
 }

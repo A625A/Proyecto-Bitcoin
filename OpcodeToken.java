@@ -1,9 +1,13 @@
 public class OpcodeToken implements Token {
 
-    private Opcode opcode;
+    private final Opcode opcode;
 
     public OpcodeToken(Opcode opcode) {
         this.opcode = opcode;
+    }
+
+    public Opcode getOpcode() {
+        return opcode;
     }
 
     public void execute(ExecutionContext ctx) {
@@ -112,6 +116,11 @@ public class OpcodeToken implements Token {
                 boolean ok = java.util.Arrays.equals(sig, CryptoMock.sha256(pubKey));
                 ctx.push(ok ? new byte[]{1} : new byte[]{0});
                 break;
+
+            case OP_IF:
+            case OP_ELSE:
+            case OP_ENDIF:
+                throw new RuntimeException("Control flow opcodes are handled by ScriptInterpreter");
         }
     }
 }

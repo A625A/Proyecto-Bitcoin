@@ -21,5 +21,8 @@ public enum Opcode {
     OP_EQUAL,
     OP_EQUALVERIFY,
     OP_HASH160,
-    OP_CHECKSIG
+    OP_CHECKSIG,
+    OP_IF,
+    OP_ELSE,
+    OP_ENDIF
 }

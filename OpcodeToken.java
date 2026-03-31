@@ -102,7 +102,7 @@ public class OpcodeToken implements Token {
                 byte[] x = ctx.pop();
                 byte[] y = ctx.pop();
                 if (!java.util.Arrays.equals(x, y))
-                    throw new RuntimeException("OP_EQUALVERIFY failed");
+                    throw new RuntimeException("OP_EQUALVERIFY fallo");
                 break;
 
             case OP_HASH160:
@@ -120,7 +120,12 @@ public class OpcodeToken implements Token {
             case OP_IF:
             case OP_ELSE:
             case OP_ENDIF:
-                throw new RuntimeException("Control flow opcodes are handled by ScriptInterpreter");
+                throw new RuntimeException("Estos opcodes los maneja ScriptInterpreter");
         }
+    }
+
+    @Override
+    public String toString() {
+        return opcode.toString();
     }
 }

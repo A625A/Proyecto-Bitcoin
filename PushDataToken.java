@@ -9,4 +9,9 @@ public class PushDataToken implements Token {
     public void execute(ExecutionContext ctx) {
         ctx.push(data);
     }
+        @Override
+    public String toString() {
+        return "0x" + Hex.bytesToHex(data);
+    }
+
 }

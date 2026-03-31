@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("Execution Context Tests")
+@DisplayName("Pruebas de contexto")
 public class ExecutionContextTest {
 
     private ExecutionContext ctx;
@@ -15,7 +15,7 @@ public class ExecutionContextTest {
     }
 
     @Test
-    @DisplayName("push should add value to stack")
+    @DisplayName("agregar un valor lo deja en la pila")
     public void testPush() {
         byte[] data = new byte[]{42};
         ctx.push(data);
@@ -24,7 +24,7 @@ public class ExecutionContextTest {
     }
 
     @Test
-    @DisplayName("pop should remove and return top value")
+    @DisplayName("quitar regresa el valor de arriba")
     public void testPop() {
         byte[] data = new byte[]{42};
         ctx.push(data);
@@ -34,7 +34,7 @@ public class ExecutionContextTest {
     }
 
     @Test
-    @DisplayName("peek should return top value without removing it")
+    @DisplayName("ver regresa el valor de arriba sin quitarlo")
     public void testPeek() {
         byte[] data = new byte[]{42};
         ctx.push(data);
@@ -44,20 +44,20 @@ public class ExecutionContextTest {
     }
 
     @Test
-    @DisplayName("isEmpty should return true for new context")
+    @DisplayName("una pila nueva esta vacia")
     public void testIsEmptyNew() {
         assertTrue(ctx.isEmpty());
     }
 
     @Test
-    @DisplayName("isEmpty should return false after push")
+    @DisplayName("despues de agregar un valor la pila no esta vacia")
     public void testIsEmptyAfterPush() {
         ctx.push(new byte[]{1});
         assertFalse(ctx.isEmpty());
     }
 
     @Test
-    @DisplayName("isEmpty should return true after pop")
+    @DisplayName("despues de quitar el valor la pila queda vacia")
     public void testIsEmptyAfterPop() {
         ctx.push(new byte[]{1});
         ctx.pop();
@@ -65,20 +65,20 @@ public class ExecutionContextTest {
     }
 
     @Test
-    @DisplayName("pop on empty stack should throw RuntimeException")
+    @DisplayName("quitar en una pila vacia lanza error")
     public void testPopEmptyStackThrowsException() {
         assertThrows(RuntimeException.class, () -> ctx.pop(),
-            "Should throw RuntimeException on pop from empty stack");
+            "Debe lanzar error si la pila esta vacia");
     }
 
     @Test
-    @DisplayName("peek on empty stack should return null")
+    @DisplayName("ver una pila vacia regresa null")
     public void testPeekEmptyStackReturnsNull() {
         assertNull(ctx.peek());
     }
 
     @Test
-    @DisplayName("stack should handle large number of pushes")
+    @DisplayName("la pila soporta muchos valores")
     public void testLargePushSequence() {
         for (int i = 0; i < 1000; i++) {
             ctx.push(new byte[]{(byte) (i % 256)});
@@ -88,7 +88,7 @@ public class ExecutionContextTest {
     }
 
     @Test
-    @DisplayName("stack should maintain LIFO order")
+    @DisplayName("la pila mantiene el orden LIFO")
     public void testLIFOOrder() {
         ctx.push(new byte[]{1});
         ctx.push(new byte[]{2});
@@ -100,70 +100,70 @@ public class ExecutionContextTest {
     }
 
     @Test
-    @DisplayName("isTrue should return false for all zero bytes")
+    @DisplayName("isTrue regresa falso si todos son cero")
     public void testIsTrueAllZeros() {
         byte[] value = new byte[]{0, 0, 0, 0};
         assertFalse(ExecutionContext.isTrue(value));
     }
 
     @Test
-    @DisplayName("isTrue should return true for single non-zero byte")
+    @DisplayName("isTrue regresa verdadero con un byte distinto de cero")
     public void testIsTrueSingleNonZero() {
         byte[] value = new byte[]{1};
         assertTrue(ExecutionContext.isTrue(value));
     }
 
     @Test
-    @DisplayName("isTrue should return true if any byte is non-zero")
+    @DisplayName("isTrue regresa verdadero si algun byte no es cero")
     public void testIsTrueAnyNonZero() {
         byte[] value = new byte[]{0, 0, 1, 0};
         assertTrue(ExecutionContext.isTrue(value));
     }
 
     @Test
-    @DisplayName("isTrue should return true for negative byte (non-zero in two's complement)")
+    @DisplayName("isTrue regresa verdadero con un byte negativo")
     public void testIsTrueNegativeByte() {
         byte[] value = new byte[]{-1};
         assertTrue(ExecutionContext.isTrue(value));
     }
 
     @Test
-    @DisplayName("isTrue should return true for single element byte array with 1")
+    @DisplayName("isTrue regresa verdadero con un arreglo que tiene 1")
     public void testIsTrueOne() {
         byte[] value = new byte[]{1};
         assertTrue(ExecutionContext.isTrue(value));
     }
 
     @Test
-    @DisplayName("isTrue should return false for empty byte array")
+    @DisplayName("isTrue regresa falso con un arreglo vacio")
     public void testIsTrueEmptyArray() {
         byte[] value = new byte[]{};
         assertFalse(ExecutionContext.isTrue(value));
     }
 
     @Test
-    @DisplayName("isTrue should return true for mixed zero and non-zero bytes")
+    @DisplayName("isTrue regresa verdadero con ceros y un valor distinto de cero")
     public void testIsTrueMixed() {
         byte[] value = new byte[]{0, 0, 0, 5, 0, 0};
         assertTrue(ExecutionContext.isTrue(value));
     }
 
     @Test
-    @DisplayName("isTrue should return true for high values")
+    @DisplayName("isTrue regresa verdadero con valores altos")
     public void testIsTrueHighValues() {
         byte[] value = new byte[]{127};
         assertTrue(ExecutionContext.isTrue(value));
     }
 
     @Test
-    @DisplayName("isTrue should handle multi-byte false value")
+    @DisplayName("isTrue regresa falso con varios bytes en cero")
     public void testIsTrueMultiByteFalse() {
         byte[] value = new byte[]{0, 0, 0, 0, 0, 0, 0, 0};
         assertFalse(ExecutionContext.isTrue(value));
     }
 
     @Test
-    @DisplayName("stack should maintain multiple values")
+    @DisplayName("la pila mantiene varios valores")
     public void testMultipleValues() {
         ctx.push(new byte[]{1});
         ctx.push(new byte[]{2});
@@ -177,7 +177,7 @@ public class ExecutionContextTest {
     }
 
     @Test
-    @DisplayName("push and pop cycles should work correctly")
+    @DisplayName("varios agregar y quitar funcionan bien")
     public void testPushPopCycles() {
         byte[] data1 = new byte[]{10};
         byte[] data2 = new byte[]{20};
@@ -191,7 +191,7 @@ public class ExecutionContextTest {
     }
 
     @Test
-    @DisplayName("alternating push and pop should work")
+    @DisplayName("alternar agregar y quitar funciona")
     public void testAlternatingPushPop() {
         ctx.push(new byte[]{1});
         assertEquals(1, ctx.pop()[0]);
@@ -207,7 +207,7 @@ public class ExecutionContextTest {
     }
 
     @Test
-    @DisplayName("push and pop multi-byte values")
+    @DisplayName("agregar y quitar varios bytes funciona")
     public void testMultiByteValue() {
         byte[] data = new byte[]{1, 2, 3, 4, 5};
         ctx.push(data);
@@ -216,7 +216,7 @@ public class ExecutionContextTest {
     }
 
     @Test
-    @DisplayName("large byte array should work")
+    @DisplayName("un arreglo grande funciona")
     public void testLargeByteArray() {
         byte[] data = new byte[1000];
         for (int i = 0; i < data.length; i++) {
@@ -228,7 +228,7 @@ public class ExecutionContextTest {
     }
 
     @Test
-    @DisplayName("push single byte value")
+    @DisplayName("agregar un solo byte funciona")
     public void testSingleByteValue() {
         ctx.push(new byte[]{42});
         byte[] value = ctx.pop();
@@ -236,7 +236,7 @@ public class ExecutionContextTest {
     }
 
     @Test
-    @DisplayName("push null-like byte array (all zeros)")
+    @DisplayName("agregar un arreglo de ceros funciona")
     public void testZeroByteArray() {
         byte[] data = new byte[]{0};
         ctx.push(data);
@@ -244,7 +244,7 @@ public class ExecutionContextTest {
     }
 
     @Test
-    @DisplayName("multiple pops from empty stack should throw on first attempt")
+    @DisplayName("varios quitar en pila vacia siguen lanzando error")
     public void testMultiplePopsEmptyStack() {
         assertThrows(RuntimeException.class, () -> ctx.pop());
         assertThrows(RuntimeException.class, () -> ctx.pop());

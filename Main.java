@@ -3,6 +3,13 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
+        boolean trace = false;
+
+        for (String arg : args) {
+            if (arg.equals("--trace")) {
+                trace = true;
+            }
+        }
 
         byte[] pubKey = Hex.hexToBytes("02AABBCCDDEEFF00112233445566778899AABBCCDDEEFF00112233445566778899");
         byte[] pubKeyHash = CryptoMock.hash160(pubKey);
@@ -20,7 +27,7 @@ public class Main {
         ExecutionContext ctx = new ExecutionContext();
         ScriptInterpreter interpreter = new ScriptInterpreter();
 
-        boolean result = interpreter.execute(tokens, ctx);
+        boolean result = interpreter.execute(tokens, ctx, trace);
 
         System.out.println(result ? "Valido" : "No valido");
 
@@ -37,7 +44,7 @@ public class Main {
 
         List<Token> tokens2 = new ScriptParser().parse(script2);
 
-        boolean result2 = interpreter.execute(tokens2, ctx);
+        boolean result2 = interpreter.execute(tokens2, ctx, trace);
 
         System.out.println(result2 ? "Valido" : "No valido");
     }

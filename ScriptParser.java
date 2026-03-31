@@ -19,7 +19,7 @@ public class ScriptParser {
             }
 
             else {
-                throw new RuntimeException("Invalid token");
+                throw new RuntimeException("Token invalido");
             }
         }
 

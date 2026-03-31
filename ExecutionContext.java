@@ -11,7 +11,7 @@ public class ExecutionContext {
 
     public byte[] pop() {
         if (stack.isEmpty())
-            throw new RuntimeException("Stack underflow");
+            throw new RuntimeException("Pila vacia");
         return stack.pop();
     }
 
@@ -28,4 +28,21 @@ public class ExecutionContext {
             if (b != 0) return true;
         return false;
     }
+        @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("[");
+        boolean primero = true;
+
+        for (byte[] item : stack) {
+            if (!primero) {
+                sb.append(", ");
+            }
+            sb.append(Hex.bytesToHex(item));
+            primero = false;
+        }
+
+        sb.append("]");
+        return sb.toString();
+    }
+
 }

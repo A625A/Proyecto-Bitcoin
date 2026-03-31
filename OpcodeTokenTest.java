@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("Opcode Token Tests")
+@DisplayName("Pruebas de opcodes")
 public class OpcodeTokenTest {
 
     private ExecutionContext ctx;
@@ -16,7 +16,7 @@ public class OpcodeTokenTest {
     }
 
     @Test
-    @DisplayName("OP_0 should push 0 to stack")
+    @DisplayName("OP_0 mete 0 en la pila")
     public void testOP0() {
         OpcodeToken token = new OpcodeToken(Opcode.OP_0);
         token.execute(ctx);
@@ -26,7 +26,7 @@ public class OpcodeTokenTest {
     }
 
     @Test
-    @DisplayName("OP_1 should push 1 to stack")
+    @DisplayName("OP_1 mete 1 en la pila")
     public void testOP1() {
         OpcodeToken token = new OpcodeToken(Opcode.OP_1);
         token.execute(ctx);
@@ -35,7 +35,7 @@ public class OpcodeTokenTest {
     }
 
     @Test
-    @DisplayName("OP_2 should push 2 to stack")
+    @DisplayName("OP_2 mete 2 en la pila")
     public void testOP2() {
         OpcodeToken token = new OpcodeToken(Opcode.OP_2);
         token.execute(ctx);
@@ -44,7 +44,7 @@ public class OpcodeTokenTest {
     }
 
     @Test
-    @DisplayName("OP_5 should push 5 to stack")
+    @DisplayName("OP_5 mete 5 en la pila")
     public void testOP5() {
         OpcodeToken token = new OpcodeToken(Opcode.OP_5);
         token.execute(ctx);
@@ -53,7 +53,7 @@ public class OpcodeTokenTest {
     }
 
     @Test
-    @DisplayName("OP_16 should push 16 to stack")
+    @DisplayName("OP_16 mete 16 en la pila")
     public void testOP16() {
         OpcodeToken token = new OpcodeToken(Opcode.OP_16);
         token.execute(ctx);
@@ -62,7 +62,7 @@ public class OpcodeTokenTest {
     }
 
     @Test
-    @DisplayName("OP_DUP should duplicate top stack value")
+    @DisplayName("OP_DUP duplica el valor de arriba")
     public void testOPDup() {
         ctx.push(new byte[]{5});
         OpcodeToken token = new OpcodeToken(Opcode.OP_DUP);
@@ -75,15 +75,15 @@ public class OpcodeTokenTest {
     }
 
     @Test
-    @DisplayName("OP_DUP with empty stack should throw RuntimeException")
+    @DisplayName("OP_DUP en pila vacia lanza error")
     public void testOPDupEmptyStackThrowsException() {
         OpcodeToken token = new OpcodeToken(Opcode.OP_DUP);
         assertThrows(RuntimeException.class, () -> token.execute(ctx), 
-            "Should throw RuntimeException when stack is empty");
+            "Debe lanzar error si la pila esta vacia");
     }
 
     @Test
-    @DisplayName("OP_DUP should work with multi-byte values")
+    @DisplayName("OP_DUP funciona con varios bytes")
     public void testOPDupMultiByteValue() {
         byte[] value = new byte[]{1, 2, 3, 4};
         ctx.push(value);
@@ -97,7 +97,7 @@ public class OpcodeTokenTest {
     }
 
     @Test
-    @DisplayName("OP_DROP should remove top stack value")
+    @DisplayName("OP_DROP quita el valor de arriba")
     public void testOPDrop() {
         ctx.push(new byte[]{5});
         ctx.push(new byte[]{10});
@@ -110,15 +110,15 @@ public class OpcodeTokenTest {
     }
 
     @Test
-    @DisplayName("OP_DROP with empty stack should throw RuntimeException")
+    @DisplayName("OP_DROP en pila vacia lanza error")
     public void testOPDropEmptyStackThrowsException() {
         OpcodeToken token = new OpcodeToken(Opcode.OP_DROP);
         assertThrows(RuntimeException.class, () -> token.execute(ctx), 
-            "Should throw RuntimeException when stack is empty");
+            "Debe lanzar error si la pila esta vacia");
     }
 
     @Test
-    @DisplayName("OP_DROP should not affect other stack values")
+    @DisplayName("OP_DROP no cambia los otros valores")
     public void testOPDropMultipleValues() {
         ctx.push(new byte[]{1});
         ctx.push(new byte[]{2});
@@ -126,14 +126,13 @@ public class OpcodeTokenTest {
         OpcodeToken token = new OpcodeToken(Opcode.OP_DROP);
         token.execute(ctx);
         
-        assertEquals(3, ctx.pop()[0]);
         assertEquals(2, ctx.pop()[0]);
         assertEquals(1, ctx.pop()[0]);
         assertTrue(ctx.isEmpty());
     }
 
     @Test
-    @DisplayName("OP_EQUAL should push true when values are equal")
+    @DisplayName("OP_EQUAL mete verdadero si los valores son iguales")
     public void testOPEqualTrue() {
         ctx.push(new byte[]{5});
         ctx.push(new byte[]{5});
@@ -145,7 +144,7 @@ public class OpcodeTokenTest {
     }
 
     @Test
-    @DisplayName("OP_EQUAL should push false when values are not equal")
+    @DisplayName("OP_EQUAL mete falso si los valores son distintos")
     public void testOPEqualFalse() {
         ctx.push(new byte[]{5});
         ctx.push(new byte[]{10});
@@ -157,24 +156,24 @@ public class OpcodeTokenTest {
     }
 
     @Test
-    @DisplayName("OP_EQUAL with empty stack should throw RuntimeException")
+    @DisplayName("OP_EQUAL en pila vacia lanza error")
     public void testOPEqualEmptyStackThrowsException() {
         OpcodeToken token = new OpcodeToken(Opcode.OP_EQUAL);
         assertThrows(RuntimeException.class, () -> token.execute(ctx), 
-            "Should throw RuntimeException when stack is empty");
+            "Debe lanzar error si la pila esta vacia");
     }
 
     @Test
-    @DisplayName("OP_EQUAL with only one value should throw RuntimeException")
+    @DisplayName("OP_EQUAL con un solo valor lanza error")
     public void testOPEqualOneValueThrowsException() {
         ctx.push(new byte[]{5});
         OpcodeToken token = new OpcodeToken(Opcode.OP_EQUAL);
         assertThrows(RuntimeException.class, () -> token.execute(ctx), 
-            "Should throw RuntimeException when only one value on stack");
+            "Debe lanzar error si solo hay un valor en la pila");
     }
 
     @Test
-    @DisplayName("OP_EQUAL should handle multi-byte comparisons")
+    @DisplayName("OP_EQUAL funciona con varios bytes")
     public void testOPEqualMultiByte() {
         byte[] value1 = new byte[]{1, 2, 3, 4};
         byte[] value2 = new byte[]{1, 2, 3, 4};
@@ -188,7 +187,7 @@ public class OpcodeTokenTest {
     }
 
     @Test
-    @DisplayName("OP_EQUALVERIFY should not throw when values are equal")
+    @DisplayName("OP_EQUALVERIFY no lanza error si son iguales")
     public void testOPEqualVerifyTrue() {
         ctx.push(new byte[]{7});
         ctx.push(new byte[]{7});
@@ -198,25 +197,25 @@ public class OpcodeTokenTest {
     }
 
     @Test
-    @DisplayName("OP_EQUALVERIFY should throw when values are not equal")
+    @DisplayName("OP_EQUALVERIFY lanza error si son distintos")
     public void testOPEqualVerifyFalse() {
         ctx.push(new byte[]{7});
         ctx.push(new byte[]{8});
         OpcodeToken token = new OpcodeToken(Opcode.OP_EQUALVERIFY);
         assertThrows(RuntimeException.class, () -> token.execute(ctx), 
-            "Should throw RuntimeException when values are not equal");
+            "Debe lanzar error si los valores son distintos");
     }
 
     @Test
-    @DisplayName("OP_EQUALVERIFY with empty stack should throw RuntimeException")
+    @DisplayName("OP_EQUALVERIFY en pila vacia lanza error")
     public void testOPEqualVerifyEmptyStackThrowsException() {
         OpcodeToken token = new OpcodeToken(Opcode.OP_EQUALVERIFY);
         assertThrows(RuntimeException.class, () -> token.execute(ctx), 
-            "Should throw RuntimeException when stack is empty");
+            "Debe lanzar error si la pila esta vacia");
     }
 
     @Test
-    @DisplayName("OP_HASH160 should hash data on stack")
+    @DisplayName("OP_HASH160 aplica hash al dato de la pila")
     public void testOPHash160() {
         ctx.push(new byte[]{1, 2, 3});
         OpcodeToken token = new OpcodeToken(Opcode.OP_HASH160);
@@ -229,15 +228,15 @@ public class OpcodeTokenTest {
     }
 
     @Test
-    @DisplayName("OP_HASH160 with empty stack should throw RuntimeException")
+    @DisplayName("OP_HASH160 en pila vacia lanza error")
     public void testOPHash160EmptyStackThrowsException() {
         OpcodeToken token = new OpcodeToken(Opcode.OP_HASH160);
         assertThrows(RuntimeException.class, () -> token.execute(ctx), 
-            "Should throw RuntimeException when stack is empty");
+            "Debe lanzar error si la pila esta vacia");
     }
 
     @Test
-    @DisplayName("OP_HASH160 should produce consistent results")
+    @DisplayName("OP_HASH160 da siempre el mismo resultado")
     public void testOPHash160Consistency() {
         byte[] data = new byte[]{1, 2, 3, 4, 5};
         
@@ -255,46 +254,46 @@ public class OpcodeTokenTest {
     }
 
     @Test
-    @DisplayName("OP_CHECKSIG with empty stack should throw RuntimeException")
+    @DisplayName("OP_CHECKSIG en pila vacia lanza error")
     public void testOPCheckSigEmptyStackThrowsException() {
         OpcodeToken token = new OpcodeToken(Opcode.OP_CHECKSIG);
         assertThrows(RuntimeException.class, () -> token.execute(ctx), 
-            "Should throw RuntimeException when stack is empty");
+            "Debe lanzar error si la pila esta vacia");
     }
 
     @Test
-    @DisplayName("OP_CHECKSIG with one value should throw RuntimeException")
+    @DisplayName("OP_CHECKSIG con un solo valor lanza error")
     public void testOPCheckSigOneValueThrowsException() {
         ctx.push(new byte[]{1, 2, 3});
         OpcodeToken token = new OpcodeToken(Opcode.OP_CHECKSIG);
         assertThrows(RuntimeException.class, () -> token.execute(ctx), 
-            "Should throw RuntimeException when only one value on stack");
+            "Debe lanzar error si solo hay un valor en la pila");
     }
 
     @Test
-    @DisplayName("popping from empty stack should throw RuntimeException")
+    @DisplayName("quitar en pila vacia lanza error")
     public void testEmptyStackPop() {
         ExecutionContext emptyCtx = new ExecutionContext();
         assertThrows(RuntimeException.class, emptyCtx::pop, 
-            "Should throw RuntimeException on empty stack pop");
+            "Debe lanzar error si la pila esta vacia");
     }
 
     @Test
-    @DisplayName("peek on empty stack should return null")
+    @DisplayName("ver una pila vacia regresa null")
     public void testEmptyStackPeek() {
         ExecutionContext emptyCtx = new ExecutionContext();
         assertNull(emptyCtx.peek());
     }
 
     @Test
-    @DisplayName("isEmpty should return true for new context")
+    @DisplayName("una pila nueva esta vacia")
     public void testEmptyStackIsEmpty() {
         ExecutionContext emptyCtx = new ExecutionContext();
         assertTrue(emptyCtx.isEmpty());
     }
 
     @Test
-    @DisplayName("multiple operations should maintain stack correctly")
+    @DisplayName("varias operaciones mantienen bien la pila")
     public void testMultipleOpcodes() {
         OpcodeToken op1 = new OpcodeToken(Opcode.OP_5);
         OpcodeToken op2 = new OpcodeToken(Opcode.OP_3);
@@ -311,7 +310,7 @@ public class OpcodeTokenTest {
     }
 
     @Test
-    @DisplayName("push and pop cycle should work correctly")
+    @DisplayName("un ciclo de agregar y quitar funciona")
     public void testPushPopCycle() {
         byte[] data = new byte[]{42};
         ctx.push(data);

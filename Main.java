@@ -4,7 +4,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // --- P2PKH Example ---
+        // --- P2PKH Example (VALID) ---
 
         byte[] pubKey = Hex.hexToBytes("02AABBCCDDEEFF00112233445566778899AABBCCDDEEFF00112233445566778899");
         byte[] pubKeyHash = CryptoMock.hash160(pubKey);
@@ -25,5 +25,24 @@ public class Main {
         boolean result = interpreter.execute(tokens, ctx);
 
         System.out.println(result ? "VALID" : "INVALID");
+
+        // --- P2PKH Example (INVALID) ---
+
+        byte[] pubKey2 = Hex.hexToBytes("02AABBCCDDEEFF00112233445566778899AABBCCDDEEFF00112233445566778899");
+        byte[] pubKeyHash2 = CryptoMock.hash160(pubKey2);
+        byte[] signature2 = CryptoMock.sha256(pubKey2);
+
+        String script2 =
+                "0x" + Hex.bytesToHex(signature2) + " " +
+                "0x" + Hex.bytesToHex(pubKey2) + " " +
+                "OP_DUP OP_DUP OP_HASH160 " +
+                "0x" + Hex.bytesToHex(pubKeyHash2) + " " +
+                "OP_EQUALVERIFY OP_CHECKSIG";
+
+        List<Token> tokens2 = new ScriptParser().parse(script2);
+
+        boolean result2 = interpreter.execute(tokens2, ctx);
+
+        System.out.println(result2 ? "VALID" : "INVALID");
     }
 }

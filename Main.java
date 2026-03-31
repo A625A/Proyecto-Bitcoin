@@ -4,8 +4,6 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // --- P2PKH Example (VALID) ---
-
         byte[] pubKey = Hex.hexToBytes("02AABBCCDDEEFF00112233445566778899AABBCCDDEEFF00112233445566778899");
         byte[] pubKeyHash = CryptoMock.hash160(pubKey);
         byte[] signature = CryptoMock.sha256(pubKey);
@@ -24,9 +22,7 @@ public class Main {
 
         boolean result = interpreter.execute(tokens, ctx);
 
-        System.out.println(result ? "VALID" : "INVALID");
-
-        // --- P2PKH Example (INVALID) ---
+        System.out.println(result ? "Valido" : "No valido");
 
         byte[] pubKey2 = Hex.hexToBytes("02AABBCCDDEEFF00112233445566778899AABBCCDDEEFF00112233445566778899");
         byte[] pubKeyHash2 = CryptoMock.hash160(pubKey2);
@@ -43,6 +39,6 @@ public class Main {
 
         boolean result2 = interpreter.execute(tokens2, ctx);
 
-        System.out.println(result2 ? "VALID" : "INVALID");
+        System.out.println(result2 ? "Valido" : "No valido");
     }
 }

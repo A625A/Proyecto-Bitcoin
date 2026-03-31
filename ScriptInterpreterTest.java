@@ -18,8 +18,6 @@ public class ScriptInterpreterTest {
         ctx = new ExecutionContext();
     }
 
-    // Basic Execution Tests 
-
     @Test
     @DisplayName("execute empty script should return false")
     public void testEmptyScript() {
@@ -48,32 +46,30 @@ public class ScriptInterpreterTest {
         assertFalse(result);
     }
 
-    // OP_IF Tests 
-
     @Test
     @DisplayName("OP_IF with true condition should execute then-block")
     public void testOPIfTrue() {
         List<Token> tokens = Arrays.asList(
-            new OpcodeToken(Opcode.OP_1),       // Push true
-            new OpcodeToken(Opcode.OP_IF),      // If true
-            new OpcodeToken(Opcode.OP_5),       // Push 5 (in "then")
+            new OpcodeToken(Opcode.OP_1),       
+            new OpcodeToken(Opcode.OP_IF),      
+            new OpcodeToken(Opcode.OP_5),       
             new OpcodeToken(Opcode.OP_ENDIF)
         );
         boolean result = interpreter.execute(tokens, ctx);
-        assertTrue(result); // 5 is true
+        assertTrue(result);
     }
 
     @Test
     @DisplayName("OP_IF with false condition should skip then-block")
     public void testOPIfFalse() {
         List<Token> tokens = Arrays.asList(
-            new OpcodeToken(Opcode.OP_0),       // Push false
-            new OpcodeToken(Opcode.OP_IF),      // If false
-            new OpcodeToken(Opcode.OP_5),       // Push 5 (should be skipped)
+            new OpcodeToken(Opcode.OP_0),       
+            new OpcodeToken(Opcode.OP_IF),      
+            new OpcodeToken(Opcode.OP_5),       
             new OpcodeToken(Opcode.OP_ENDIF)
         );
         boolean result = interpreter.execute(tokens, ctx);
-        assertFalse(result); // Stack is empty
+        assertFalse(result);
     }
 
     @Test
@@ -88,36 +84,34 @@ public class ScriptInterpreterTest {
             "Should throw RuntimeException when OP_IF executed on empty stack");
     }
 
-    // OP_ELSE Tests
-
     @Test
     @DisplayName("OP_IF-ELSE with true condition should execute then-block")
     public void testOPIfElseTrue() {
         List<Token> tokens = Arrays.asList(
-            new OpcodeToken(Opcode.OP_1),       // Push true
-            new OpcodeToken(Opcode.OP_IF),      // If true
-            new OpcodeToken(Opcode.OP_5),       // Push 5 (in "then")
+            new OpcodeToken(Opcode.OP_1),       
+            new OpcodeToken(Opcode.OP_IF),      
+            new OpcodeToken(Opcode.OP_5),       
             new OpcodeToken(Opcode.OP_ELSE),
-            new OpcodeToken(Opcode.OP_10),      // Push 10 (in "else", skipped)
+            new OpcodeToken(Opcode.OP_10),      
             new OpcodeToken(Opcode.OP_ENDIF)
         );
         boolean result = interpreter.execute(tokens, ctx);
-        assertTrue(result); // 5 is true
+        assertTrue(result); 
     }
 
     @Test
     @DisplayName("OP_IF-ELSE with false condition should execute else-block")
     public void testOPIfElseFalse() {
         List<Token> tokens = Arrays.asList(
-            new OpcodeToken(Opcode.OP_0),       // Push false
-            new OpcodeToken(Opcode.OP_IF),      // If false
-            new OpcodeToken(Opcode.OP_5),       // Push 5 (in "then", skipped)
+            new OpcodeToken(Opcode.OP_0),       
+            new OpcodeToken(Opcode.OP_IF),      
+            new OpcodeToken(Opcode.OP_5),      
             new OpcodeToken(Opcode.OP_ELSE),
-            new OpcodeToken(Opcode.OP_10),      // Push 10 (in "else")
+            new OpcodeToken(Opcode.OP_10),      
             new OpcodeToken(Opcode.OP_ENDIF)
         );
         boolean result = interpreter.execute(tokens, ctx);
-        assertTrue(result); // 10 is true
+        assertTrue(result); 
     }
 
     @Test
@@ -125,21 +119,21 @@ public class ScriptInterpreterTest {
     public void testOPElseWithoutIfThrowsException() {
         List<Token> tokens = Arrays.asList(
             new OpcodeToken(Opcode.OP_1),
-            new OpcodeToken(Opcode.OP_ELSE),    // No OP_IF
+            new OpcodeToken(Opcode.OP_ELSE),   
             new OpcodeToken(Opcode.OP_2)
         );
         assertThrows(RuntimeException.class, () -> interpreter.execute(tokens, ctx),
             "Should throw RuntimeException when OP_ELSE has no matching OP_IF");
     }
 
-    // OP_ENDIF Tests 
+   
 
     @Test
     @DisplayName("OP_ENDIF without matching OP_IF should throw exception")
     public void testOPEndifWithoutIfThrowsException() {
         List<Token> tokens = Arrays.asList(
             new OpcodeToken(Opcode.OP_1),
-            new OpcodeToken(Opcode.OP_ENDIF)    // No OP_IF
+            new OpcodeToken(Opcode.OP_ENDIF)    
         );
         assertThrows(RuntimeException.class, () -> interpreter.execute(tokens, ctx),
             "Should throw RuntimeException when OP_ENDIF has no matching OP_IF");
@@ -152,90 +146,86 @@ public class ScriptInterpreterTest {
             new OpcodeToken(Opcode.OP_1),
             new OpcodeToken(Opcode.OP_IF),
             new OpcodeToken(Opcode.OP_5)
-            // No OP_ENDIF
+            
         );
         assertThrows(RuntimeException.class, () -> interpreter.execute(tokens, ctx),
             "Should throw RuntimeException for unclosed OP_IF");
     }
 
-    // Nested OP_IF Tests 
+   
 
     @Test
     @DisplayName("nested OP_IF with both true should execute innermost code")
     public void testNestedOPIfBothTrue() {
         List<Token> tokens = Arrays.asList(
-            new OpcodeToken(Opcode.OP_1),       // Outer condition: true
+            new OpcodeToken(Opcode.OP_1),
             new OpcodeToken(Opcode.OP_IF),
-            new OpcodeToken(Opcode.OP_1),       // Inner condition: true
+            new OpcodeToken(Opcode.OP_1),
             new OpcodeToken(Opcode.OP_IF),
-            new OpcodeToken(Opcode.OP_7),       // Push 7
+            new OpcodeToken(Opcode.OP_7),
             new OpcodeToken(Opcode.OP_ENDIF),
             new OpcodeToken(Opcode.OP_ENDIF)
         );
         boolean result = interpreter.execute(tokens, ctx);
-        assertTrue(result); // 7 is true
+        assertTrue(result);
     }
 
     @Test
     @DisplayName("nested OP_IF with outer false should skip all inner code")
     public void testNestedOPIfOuterFalse() {
         List<Token> tokens = Arrays.asList(
-            new OpcodeToken(Opcode.OP_0),       // Outer condition: false
+            new OpcodeToken(Opcode.OP_0),
             new OpcodeToken(Opcode.OP_IF),
-            new OpcodeToken(Opcode.OP_1),       // Inner condition (not evaluated)
+            new OpcodeToken(Opcode.OP_1),
             new OpcodeToken(Opcode.OP_IF),
-            new OpcodeToken(Opcode.OP_7),       // Push 7 (not executed)
+            new OpcodeToken(Opcode.OP_7),
             new OpcodeToken(Opcode.OP_ENDIF),
             new OpcodeToken(Opcode.OP_ENDIF)
         );
         boolean result = interpreter.execute(tokens, ctx);
-        assertFalse(result); // Stack is empty
+        assertFalse(result);
     }
 
     @Test
     @DisplayName("nested OP_IF with inner false should not execute innermost code")
     public void testNestedOPIfInnerFalse() {
         List<Token> tokens = Arrays.asList(
-            new OpcodeToken(Opcode.OP_1),       // Outer condition: true
+            new OpcodeToken(Opcode.OP_1),
             new OpcodeToken(Opcode.OP_IF),
-            new OpcodeToken(Opcode.OP_0),       // Inner condition: false
+            new OpcodeToken(Opcode.OP_0),
             new OpcodeToken(Opcode.OP_IF),
-            new OpcodeToken(Opcode.OP_7),       // Push 7 (not executed)
+            new OpcodeToken(Opcode.OP_7),
             new OpcodeToken(Opcode.OP_ENDIF),
             new OpcodeToken(Opcode.OP_ENDIF)
         );
         boolean result = interpreter.execute(tokens, ctx);
-        assertFalse(result); // Stack is empty
+        assertFalse(result);
     }
-
-    // Complex Control Flow Tests 
 
     @Test
     @DisplayName("IF-ELSE-IF structure should work correctly")
     public void testIfElseIfStructure() {
         List<Token> tokens = Arrays.asList(
-            new OpcodeToken(Opcode.OP_0),       // First condition: false
+            new OpcodeToken(Opcode.OP_0),
             new OpcodeToken(Opcode.OP_IF),
-            new OpcodeToken(Opcode.OP_1),       // Skip this
+            new OpcodeToken(Opcode.OP_1),
             new OpcodeToken(Opcode.OP_ELSE),
-            new OpcodeToken(Opcode.OP_1),       // Condition in else: true
+            new OpcodeToken(Opcode.OP_1),
             new OpcodeToken(Opcode.OP_IF),
-            new OpcodeToken(Opcode.OP_9),       // Execute this
+            new OpcodeToken(Opcode.OP_9),
             new OpcodeToken(Opcode.OP_ENDIF),
             new OpcodeToken(Opcode.OP_ENDIF)
         );
         boolean result = interpreter.execute(tokens, ctx);
-        assertTrue(result); // 9 is true
+        assertTrue(result);
     }
-
-    // Empty Stack in Complex Scenarios 
 
     @Test
     @DisplayName("executing without final value should return false")
     public void testNoFinalValue() {
         List<Token> tokens = Arrays.asList(
             new OpcodeToken(Opcode.OP_5),
-            new OpcodeToken(Opcode.OP_DROP)     // Drop the only value
+            new OpcodeToken(Opcode.OP_DROP)
         );
         boolean result = interpreter.execute(tokens, ctx);
         assertFalse(result);
@@ -245,7 +235,7 @@ public class ScriptInterpreterTest {
     @DisplayName("OP_DUP on empty stack should throw exception")
     public void testOPDupEmptyStackInScript() {
         List<Token> tokens = Arrays.asList(
-            new OpcodeToken(Opcode.OP_DUP)      // Empty stack
+            new OpcodeToken(Opcode.OP_DUP)
         );
         assertThrows(RuntimeException.class, () -> interpreter.execute(tokens, ctx),
             "Should throw RuntimeException when OP_DUP executed on empty stack");
@@ -255,7 +245,7 @@ public class ScriptInterpreterTest {
     @DisplayName("OP_DROP on empty stack should throw exception")
     public void testOPDropEmptyStackInScript() {
         List<Token> tokens = Arrays.asList(
-            new OpcodeToken(Opcode.OP_DROP)     // Empty stack
+            new OpcodeToken(Opcode.OP_DROP)
         );
         assertThrows(RuntimeException.class, () -> interpreter.execute(tokens, ctx),
             "Should throw RuntimeException when OP_DROP executed on empty stack");
@@ -266,23 +256,21 @@ public class ScriptInterpreterTest {
     public void testOPEqualInsufficientOperands() {
         List<Token> tokens = Arrays.asList(
             new OpcodeToken(Opcode.OP_5),
-            new OpcodeToken(Opcode.OP_EQUAL)    // Only one operand
+            new OpcodeToken(Opcode.OP_EQUAL)
         );
         assertThrows(RuntimeException.class, () -> interpreter.execute(tokens, ctx),
             "Should throw RuntimeException when OP_EQUAL has insufficient operands");
     }
 
-    // Mixed Operations Tests 
-
     @Test
     @DisplayName("complex script with multiple operations")
     public void testComplexScript() {
         List<Token> tokens = Arrays.asList(
-            new OpcodeToken(Opcode.OP_5),       // Stack: [5]
-            new OpcodeToken(Opcode.OP_DUP),     // Stack: [5, 5]
-            new OpcodeToken(Opcode.OP_EQUAL),   // Stack: [1]
+            new OpcodeToken(Opcode.OP_5),
+            new OpcodeToken(Opcode.OP_DUP),
+            new OpcodeToken(Opcode.OP_EQUAL),
             new OpcodeToken(Opcode.OP_IF),
-            new OpcodeToken(Opcode.OP_1),       // Stack: [1]
+            new OpcodeToken(Opcode.OP_1),
             new OpcodeToken(Opcode.OP_ENDIF)
         );
         boolean result = interpreter.execute(tokens, ctx);
@@ -308,10 +296,8 @@ public class ScriptInterpreterTest {
             new OpcodeToken(Opcode.OP_EQUAL)
         );
         boolean result = interpreter.execute(tokens, ctx);
-        assertTrue(result); // Both values equal, so true
+        assertTrue(result);
     }
-
-    // Edge Cases 
 
     @Test
     @DisplayName("executing zero should return false")

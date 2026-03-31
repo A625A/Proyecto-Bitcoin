@@ -14,8 +14,6 @@ public class ExecutionContextTest {
         ctx = new ExecutionContext();
     }
 
-    // ========== Basic Push/Pop Tests ==========
-
     @Test
     @DisplayName("push should add value to stack")
     public void testPush() {
@@ -44,8 +42,6 @@ public class ExecutionContextTest {
         assertArrayEquals(data, peeked);
         assertFalse(ctx.isEmpty());
     }
-
-    // Empty Stack Tests
 
     @Test
     @DisplayName("isEmpty should return true for new context")
@@ -81,8 +77,6 @@ public class ExecutionContextTest {
         assertNull(ctx.peek());
     }
 
-    // Stack Overflow Prevention Tests
-
     @Test
     @DisplayName("stack should handle large number of pushes")
     public void testLargePushSequence() {
@@ -104,8 +98,6 @@ public class ExecutionContextTest {
         assertEquals(2, ctx.pop()[0]);
         assertEquals(1, ctx.pop()[0]);
     }
-
-    // isTrue Tests 
 
     @Test
     @DisplayName("isTrue should return false for all zero bytes")
@@ -131,7 +123,7 @@ public class ExecutionContextTest {
     @Test
     @DisplayName("isTrue should return true for negative byte (non-zero in two's complement)")
     public void testIsTrueNegativeByte() {
-        byte[] value = new byte[]{-1}; // 0xFF
+        byte[] value = new byte[]{-1};
         assertTrue(ExecutionContext.isTrue(value));
     }
 
@@ -169,8 +161,6 @@ public class ExecutionContextTest {
         byte[] value = new byte[]{0, 0, 0, 0, 0, 0, 0, 0};
         assertFalse(ExecutionContext.isTrue(value));
     }
-
-    // Multiple Values Tests 
 
     @Test
     @DisplayName("stack should maintain multiple values")
@@ -216,8 +206,6 @@ public class ExecutionContextTest {
         assertTrue(ctx.isEmpty());
     }
 
-    // Multi-byte Value Tests 
-
     @Test
     @DisplayName("push and pop multi-byte values")
     public void testMultiByteValue() {
@@ -239,8 +227,6 @@ public class ExecutionContextTest {
         assertArrayEquals(data, popped);
     }
 
-    // Edge Cases 
-
     @Test
     @DisplayName("push single byte value")
     public void testSingleByteValue() {
@@ -257,17 +243,12 @@ public class ExecutionContextTest {
         assertFalse(ExecutionContext.isTrue(ctx.peek()));
     }
 
-    // Error Handling Tests 
-
     @Test
     @DisplayName("multiple pops from empty stack should throw on first attempt")
     public void testMultiplePopsEmptyStack() {
         assertThrows(RuntimeException.class, () -> ctx.pop());
-        // Second pop should also throw
         assertThrows(RuntimeException.class, () -> ctx.pop());
     }
-
-    // Helper Methods 
 
     private int getStackSize() {
         int count = 0;

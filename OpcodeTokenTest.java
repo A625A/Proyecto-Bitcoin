@@ -15,8 +15,6 @@ public class OpcodeTokenTest {
         ctx = new ExecutionContext();
     }
 
-    // OP_0-OP_16 Tests
-
     @Test
     @DisplayName("OP_0 should push 0 to stack")
     public void testOP0() {
@@ -63,8 +61,6 @@ public class OpcodeTokenTest {
         assertEquals(16, value[0]);
     }
 
-    // OP_DUP Tests 
-
     @Test
     @DisplayName("OP_DUP should duplicate top stack value")
     public void testOPDup() {
@@ -99,8 +95,6 @@ public class OpcodeTokenTest {
         assertArrayEquals(value, top);
         assertArrayEquals(value, second);
     }
-
-    // OP_DROP Tests
 
     @Test
     @DisplayName("OP_DROP should remove top stack value")
@@ -137,8 +131,6 @@ public class OpcodeTokenTest {
         assertEquals(1, ctx.pop()[0]);
         assertTrue(ctx.isEmpty());
     }
-
-    // OP_EQUAL Tests 
 
     @Test
     @DisplayName("OP_EQUAL should push true when values are equal")
@@ -195,15 +187,12 @@ public class OpcodeTokenTest {
         assertTrue(ExecutionContext.isTrue(result));
     }
 
-    // OP_EQUALVERIFY Tests 
-
     @Test
     @DisplayName("OP_EQUALVERIFY should not throw when values are equal")
     public void testOPEqualVerifyTrue() {
         ctx.push(new byte[]{7});
         ctx.push(new byte[]{7});
         OpcodeToken token = new OpcodeToken(Opcode.OP_EQUALVERIFY);
-        // Should not throw
         assertDoesNotThrow(() -> token.execute(ctx));
         assertTrue(ctx.isEmpty());
     }
@@ -226,8 +215,6 @@ public class OpcodeTokenTest {
             "Should throw RuntimeException when stack is empty");
     }
 
-    // OP_HASH160 Tests
-
     @Test
     @DisplayName("OP_HASH160 should hash data on stack")
     public void testOPHash160() {
@@ -238,7 +225,6 @@ public class OpcodeTokenTest {
         assertFalse(ctx.isEmpty());
         byte[] result = ctx.pop();
         assertNotNull(result);
-        // HASH160 output is 20 bytes long
         assertEquals(20, result.length);
     }
 
@@ -268,8 +254,6 @@ public class OpcodeTokenTest {
         assertArrayEquals(result1, result2);
     }
 
-    // OP_CHECKSIG Tests
-
     @Test
     @DisplayName("OP_CHECKSIG with empty stack should throw RuntimeException")
     public void testOPCheckSigEmptyStackThrowsException() {
@@ -286,8 +270,6 @@ public class OpcodeTokenTest {
         assertThrows(RuntimeException.class, () -> token.execute(ctx), 
             "Should throw RuntimeException when only one value on stack");
     }
-
-    // Empty Stack Tests 
 
     @Test
     @DisplayName("popping from empty stack should throw RuntimeException")
@@ -310,8 +292,6 @@ public class OpcodeTokenTest {
         ExecutionContext emptyCtx = new ExecutionContext();
         assertTrue(emptyCtx.isEmpty());
     }
-
-    // Stack State Tests 
 
     @Test
     @DisplayName("multiple operations should maintain stack correctly")
